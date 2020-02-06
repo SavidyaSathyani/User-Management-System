@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: user-service
+  ldap:
+    urls: ldap://localhost:389
+    base: dc=library,dc=com
+    username: uid=admin,ou=system
+    password: secret
+
+
+server:
+  port: 8081
+
