@@ -6,12 +6,14 @@ import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.support.LdapNameBuilder;
+import org.springframework.stereotype.Repository;
 
 import javax.naming.Name;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.BasicAttributes;
 
+@Repository
 public class UserRepository {
 
     @Autowired
@@ -20,7 +22,7 @@ public class UserRepository {
     public String create(User user) {
         Name dn = buildDn(user.getEmail());
         ldapTemplate.bind(dn, null, buildAttribute(user));
-        return user.getEmail() + "created";
+        return user.getEmail() + " created";
     }
 
     public User findByEmail(String email) {
@@ -35,7 +37,7 @@ public class UserRepository {
         return LdapNameBuilder
                 .newInstance()
                 .add("ou", "users")
-                .add("mail", email)
+                .add("uid", email)
                 .build();
     }
 
@@ -51,6 +53,7 @@ public class UserRepository {
         Attributes attributes = new BasicAttributes();
         attributes.put(ocAttributes);
         attributes.put("ou", "users");
+        attributes.put("uid", user.getEmail());
         attributes.put("mail", user.getEmail());
         attributes.put("cn", user.getFirstName());
         attributes.put("sn", user.getLastName());

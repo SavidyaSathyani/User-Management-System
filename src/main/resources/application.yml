@@ -1,6 +1,8 @@
 spring:
   application:
     name: user-service
+  basic:
+    enable: false
   ldap:
     urls: ldap://localhost:389
     base: dc=library,dc=com

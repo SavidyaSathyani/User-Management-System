@@ -3,34 +3,41 @@ package com.user.usermanagement.services.impl;
 import com.user.usermanagement.models.User;
 import com.user.usermanagement.repositories.UserRepository;
 import com.user.usermanagement.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserRepository userRepository;
 
     @Override
-    public User getByEmail(String email) {
+    public ResponseEntity<User> getByEmail(String email) {
         try{
-            return userRepository.findByEmail(email);
+            User userFound = userRepository.findByEmail(email);
+
+            if(userFound != null) {
+                return new ResponseEntity<>(userFound, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         } catch (Exception ex) {
             System.out.println(ex);
-            return userRepository.findByEmail(email);
-
-        } finally {
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     @Override
-    public String add(User user) {
+    public ResponseEntity<String> addUser(User user) {
         try{
-            return userRepository.create(user);
+            return new ResponseEntity<>(userRepository.create(user), HttpStatus.CREATED);
         } catch(Exception ex) {
             System.err.println(ex);
-            return userRepository.create(user);
-        } finally {
-
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
